@@ -1,0 +1,22 @@
+{
+  "name": "paimon",
+  "version": "1.0.1",
+  "description": "Semi-opinionated discord.js bot framework",
+  "main": "src/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyper-neutrino/paimon.git"
+  },
+  "author": "hyper-neutrino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hyper-neutrino/paimon/issues"
+  },
+  "homepage": "https://github.com/hyper-neutrino/paimon#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.4.1"
+  }
+}
