@@ -16,7 +16,6 @@
   "homepage": "https://github.com/hyper-neutrino/paimon#readme",
   "dependencies": {
     "discord.js": "^13.6.0",
-    "lodash": "^4.17.21",
-    "mongodb": "^4.4.1"
+    "file-ez": "^1.0.0"
   }
 }
