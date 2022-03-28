@@ -13,12 +13,13 @@ export class Client extends DJSClient {
         this.before_autocomplete = options.before_autocomplete;
         this.before_user_command = options.before_user_command;
         this.before_message_command = options.before_message_command;
+        this.process = options.process;
         this.after = options.after;
         this.error = options.error;
         for (const command of options.commands || []) {
             this.add_command(command);
         }
-        for (const event of options.events) {
+        for (const event of options.events || []) {
             this.on(event.event, event.run);
         }
     }
@@ -109,10 +110,15 @@ export class Client extends DJSClient {
             }
             load_subcommands(command.subcommands, obj.options);
             load_options(command.options, obj.options);
+            if (options.log) {
+                console.log(`Creating chat command "${key}".`);
+            }
             await this.application.commands.create(obj, guild_id);
         }
 
         for (const key of commands ?? this.user_commands.keys()) {
+            if (!this.user_commands.get(key)) continue;
+            console.log(`Creating user command "${key}".`);
             await this.application.commands.create(
                 {
                     name: key,
@@ -123,6 +129,8 @@ export class Client extends DJSClient {
         }
 
         for (const key of commands ?? this.message_commands.keys()) {
+            if (!this.message_commands.get(key)) continue;
+            console.log(`Creating message command "${key}".`);
             await this.application.commands.create(
                 {
                     name: key,
@@ -138,11 +146,13 @@ export class Client extends DJSClient {
             interaction.whisper = async (object) => {
                 if (is_string(object)) object = { content: object };
                 object.ephemeral = true;
+                object.allowedMentions = { parse: [] };
                 await interaction.reply(object);
             };
 
             interaction.shout = async (object) => {
                 if (is_string(object)) object = { content: object };
+                object.allowedMentions = { parse: [] };
                 await interaction.reply(object);
             };
         }
@@ -239,6 +249,9 @@ export class Client extends DJSClient {
         let success = true;
         try {
             let response = await object.execute(interaction, ...args);
+            if (this.process) {
+                response = await this.process(interaction, response, ...args);
+            }
             if (response) await interaction.whisper(response);
         } catch (error) {
             success = false;

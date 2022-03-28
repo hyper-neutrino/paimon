@@ -71,7 +71,13 @@ export class Command {
                 description,
             };
 
-            if (choices.length > 0) option.choices = choices;
+            if (choices.length > 0) {
+                option.choices = choices.map((item) =>
+                    Array.isArray(item)
+                        ? { name: item[0], value: item[1] }
+                        : { name: item, value: item }
+                );
+            }
             if (autocomplete) option.autocomplete = true;
             if (required) option.required = true;
 
