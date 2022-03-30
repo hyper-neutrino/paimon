@@ -9,6 +9,7 @@ export class Client extends DJSClient {
         this.commands = new Map();
         this.user_commands = new Map();
         this.message_commands = new Map();
+        this.all_commands = new Set();
         this.before = options.before;
         this.before_autocomplete = options.before_autocomplete;
         this.before_user_command = options.before_user_command;
@@ -37,6 +38,7 @@ export class Client extends DJSClient {
                     subgroups: new Map(),
                     options: [],
                 });
+                this.all_commands.add(command.command);
             }
             const commanddir = this.commands.get(command.command);
             let dir;
@@ -75,11 +77,13 @@ export class Client extends DJSClient {
                 execute: command.execute,
                 extras: command.extras,
             });
+            this.all_commands.add(command.name);
         } else if (command instanceof MessageCommand) {
             this.message_commands.set(command.name, {
                 execute: command.execute,
                 extras: command.extras,
             });
+            this.all_commands.add(command.name);
         }
     }
 
@@ -236,8 +240,8 @@ export class Client extends DJSClient {
             ).get(interaction.commandName);
             args = [
                 interaction.isUserContextMenu()
-                    ? interaction.user
-                    : interaction.message,
+                    ? interaction.targetUser
+                    : interaction.targetMessage,
             ];
         } else {
             return;
