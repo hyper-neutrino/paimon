@@ -302,5 +302,3 @@ const getmap = {
     MENTIONABLE: "getMentionable",
     NUMBER: "getNumber",
 };
-
-class Next extends Error {}
