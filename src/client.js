@@ -225,7 +225,9 @@ export class Client extends DJSClient {
                             interaction,
                             interaction.options.getFocused()
                         )
-                    ).map((choice) => ({ name: choice, value: choice }))
+                    )
+                        .map((choice) => ({ name: choice, value: choice }))
+                        .slice(0, 25)
                 );
                 return;
             }
