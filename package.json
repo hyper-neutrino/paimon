@@ -1,6 +1,6 @@
 {
   "name": "paimon.js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Semi-opinionated discord.js bot framework",
   "main": "src/index.js",
   "type": "module",
