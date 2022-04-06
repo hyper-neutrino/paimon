@@ -187,18 +187,6 @@ export class Client extends DJSClient {
                         ](option.name, option.required)
                     );
                 }
-                if (this.before) {
-                    let initial = await this.before(
-                        interaction,
-                        object.extras,
-                        ...args
-                    );
-                    if (initial) {
-                        if (initial !== true)
-                            await interaction.whisper(initial);
-                        return;
-                    }
-                }
             } else {
                 if (this.before_autocomplete) {
                     let initial = await this.before_autocomplete(
@@ -247,6 +235,20 @@ export class Client extends DJSClient {
             ];
         } else {
             return;
+        }
+
+        if (interaction.isCommand() || interaction.isContextMenu()) {
+            if (this.before) {
+                let initial = await this.before(
+                    interaction,
+                    object.extras,
+                    ...args
+                );
+                if (initial) {
+                    if (initial !== true) await interaction.whisper(initial);
+                    return;
+                }
+            }
         }
 
         if (!object) return;
