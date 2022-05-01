@@ -151,13 +151,13 @@ export class Client extends DJSClient {
                 if (is_string(object)) object = { content: object };
                 object.ephemeral = true;
                 object.allowedMentions = { parse: [] };
-                await interaction.reply(object);
+                return await interaction.reply(object);
             };
 
             interaction.shout = async (object) => {
                 if (is_string(object)) object = { content: object };
                 object.allowedMentions = { parse: [] };
-                await interaction.reply(object);
+                return await interaction.reply(object);
             };
         }
 
