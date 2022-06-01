@@ -92,6 +92,8 @@ export class Client extends DJSClient {
         const guild_id = options.guild_id;
         const commands = options.commands;
 
+        const to_create = [];
+
         for (const key of commands ?? this.commands.keys()) {
             const command = this.commands.get(key);
             if (!command) continue;
@@ -114,35 +116,20 @@ export class Client extends DJSClient {
             }
             load_subcommands(command.subcommands, obj.options);
             load_options(command.options, obj.options);
-            if (options.log) {
-                console.log(`Creating chat command "${key}".`);
-            }
-            await this.application.commands.create(obj, guild_id);
+            to_create.push(obj);
         }
 
         for (const key of commands ?? this.user_commands.keys()) {
             if (!this.user_commands.get(key)) continue;
-            console.log(`Creating user command "${key}".`);
-            await this.application.commands.create(
-                {
-                    name: key,
-                    type: "USER",
-                },
-                guild_id
-            );
+            to_create.push({ name: key, type: "USER" });
         }
 
         for (const key of commands ?? this.message_commands.keys()) {
             if (!this.message_commands.get(key)) continue;
-            console.log(`Creating message command "${key}".`);
-            await this.application.commands.create(
-                {
-                    name: key,
-                    type: "MESSAGE",
-                },
-                guild_id
-            );
+            to_create.push({ name: key, type: "MESSAGE" });
         }
+
+        await this.application.commands.set(to_create, guild_id);
     }
 
     async handle_command(interaction) {
